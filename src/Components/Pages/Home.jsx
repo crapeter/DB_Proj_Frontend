@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Form, Button } from "react-bootstrap";
 import { useAuth } from "../Misc/AuthContext";
+import "../../CSS/Home.css";
 
 const HomePage = () => {
   const nav = useNavigate();
@@ -14,23 +15,73 @@ const HomePage = () => {
     nav("/Register");
   };
 
+  const createAlert = () => {
+    nav("/Incident_Reports");
+  };
+
+  const viewReports = () => {
+    nav("/Dispatch_Panel");
+  };
+
   const logout = () => {
     setIsLoggedIn(false);
+    setEmail("");
+    setPassword("");
+  };
+
+  const login = (e) => {
+    e.preventDefault();
+    // API call goes here eventually
+    setIsLoggedIn(true);
   };
 
   return (
     <div className="home-page">
       {isLoggedIn ? (
-        <div>
-          <h1>Welcome to the Home Page</h1>
-          <p>{JSON.stringify(isLoggedIn)} </p>
+        <div className="phone-frame">
+          <Button className="logout-button" type="submit" onClick={logout}>
+            Logout
+          </Button>
+          <div className="notch"></div>
+
+          <div className="top-bar">
+            <div className="icon"></div>
+            <h2 className="dashboard-title">Home Dashboard</h2>
+            <div className="icon-group">
+              <div className="icon"></div>
+              <div className="icon"></div>
+            </div>
+          </div>
+
+          <div className="content">
+            <div className="section">
+              <div className="label" id="live_alert_id" onClick={createAlert}>
+                Live Alerts
+              </div>
+              <div className="box">Stuff to be added here</div>
+            </div>
+          </div>
+
+          <div className="section">
+            <div
+              className="label"
+              id="incident_report_id"
+              onClick={viewReports}
+            >
+              Incident Report
+            </div>
+            <div className="box">Stuff to be added here</div>
+          </div>
+
+          <div className="section center">
+            <div className="label">Safety Tips</div>
+            <div className="box tall">Stuff to be added here</div>
+          </div>
         </div>
       ) : (
-        <div>
-          <p>{JSON.stringify(isLoggedIn)} </p>
+        <div className="login-form">
           <h2>Login</h2>
-          <Button onClick={logout}>Logout</Button>
-          <Form>
+          <Form onSubmit={login}>
             <Form.Group controlId="formBasicEmail">
               <Form.Control
                 type="email"
@@ -49,7 +100,7 @@ const HomePage = () => {
                 required
               />
               <div>
-                <Button variant="primary" type="submit">
+                <Button type="submit">
                   Submit
                 </Button>
                 <div className="register-link">
