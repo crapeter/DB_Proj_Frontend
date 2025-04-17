@@ -1,0 +1,79 @@
+.alerts-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px 20px;
+  font-family: Arial, sans-serif;
+}
+
+.alerts-title {
+  color: #ff7f2a;
+  font-size: 24px;
+  margin-bottom: 30px;
+}
+
+.alert-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 320px;
+  margin-bottom: 30px;
+}
+
+.alert-form input,
+.alert-form select {
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+}
+
+.alert-form button {
+  padding: 10px;
+  background-color: #ff944d;
+  border: 1px solid #555;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.alert-card {
+  width: 100%;
+  max-width: 320px;
+  background-color: #f7f7f7;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  overflow: hidden;
+}
+
+.alert-header {
+  background-color: #ff7f2a;
+  color: white;
+  padding: 10px;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.alert-body {
+  padding: 10px;
+  font-size: 14px;
+  color: #333;
+}
+
+.back-button {
+  margin-top: 20px;
+}
+
+.back-button button {
+  background-color: red;
+  color: white;
+  font-size: 20px;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+}

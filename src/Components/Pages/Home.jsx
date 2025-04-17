@@ -16,11 +16,11 @@ const HomePage = () => {
   };
 
   const createAlert = () => {
-    nav("/Incident_Reports");
+    nav("/Alerts");
   };
 
   const viewReports = () => {
-    nav("/Dispatch_Panel");
+    nav("/Incident_Reports");
   };
 
   const logout = () => {
@@ -100,9 +100,7 @@ const HomePage = () => {
                 required
               />
               <div>
-                <Button type="submit">
-                  Submit
-                </Button>
+                <Button type="submit">Submit</Button>
                 <div className="register-link">
                   <p>Don't have an account?</p>
                   <Button variant="link" onClick={toRegisterPage}>

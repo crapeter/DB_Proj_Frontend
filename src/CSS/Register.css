@@ -33,9 +33,10 @@
 
 .register-page form label {
   font-weight: 500;
-  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
   display: block;
-  color: #333;
+  color: white;
+  border-radius: 5px;
 }
 
 .register-page form input,

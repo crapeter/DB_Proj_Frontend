@@ -1,0 +1,62 @@
+.incident-report-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px 20px;
+  font-family: Arial, sans-serif;
+}
+
+.title {
+  color: #ff7f2a;
+  font-size: 24px;
+  margin-bottom: 30px;
+}
+
+.report-form {
+  width: 100%;
+  max-width: 300px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+label {
+  background-color: #ff7f2a;
+  color: white;
+  padding: 4px 10px;
+  font-size: 14px;
+}
+
+input,
+textarea {
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #aaa;
+  border-radius: 3px;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #ff944d;
+  border: 1px solid #555;
+  font-weight: bold;
+  color: black;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.back-button {
+  margin-top: 20px;
+  background-color: red;
+  color: white;
+  font-size: 24px;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+}

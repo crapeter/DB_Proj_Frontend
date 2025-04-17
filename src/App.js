@@ -6,7 +6,7 @@ import { AuthProvider } from "./Components/Misc/AuthContext";
 import DispatchPanel from "./Components/Pages/DispatchPanel";
 import Home from "./Components/Pages/Home";
 import IncidentReport from "./Components/Pages/IncidentReport.jsx";
-import Login from "./Components/Pages/Login";
+import Alerts from "./Components/Pages/Alerts";
 import Register from "./Components/Pages/Register";
 
 function App() {
@@ -17,7 +17,7 @@ function App() {
           <Route exact path="/" Component={Home} />
           <Route exact path="/Dispatch_Panel" Component={DispatchPanel} />
           <Route exact path="/Incident_Reports" Component={IncidentReport} />
-          <Route exact path="/Login" Component={Login} />
+          <Route exact path="/Alerts" Component={Alerts} />
           <Route exact path="/Register" Component={Register} />
         </Routes>
       </BrowserRouter>
