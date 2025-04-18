@@ -12,6 +12,18 @@
   margin-bottom: 30px;
 }
 
+.alert-form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  max-width: 320px;
+  max-height: 750px;
+  overflow-y: auto;
+  margin-bottom: 30px;
+}
+
 .alert-form {
   display: flex;
   flex-direction: column;
@@ -39,6 +51,13 @@
   border-radius: 4px;
 }
 
+/* .alerts-list {
+  max-height: 300px;
+  overflow-y: auto;
+  width: 100%;
+  max-width: 320px;
+} */
+
 .alert-card {
   width: 100%;
   max-width: 320px;
@@ -46,7 +65,6 @@
   border: 1px solid #ccc;
   border-radius: 6px;
   margin-bottom: 15px;
-  overflow: hidden;
 }
 
 .alert-header {
