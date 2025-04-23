@@ -3,24 +3,23 @@ import { Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../Misc/AuthContext";
 import axios from "axios";
-import "../../CSS/IncidentReport.css";
+import "../../CSS/Alerts.css";
 
-const IncidentReport = () => {
+const ViewAlertsPage = () => {
   const nav = useNavigate();
-  const [date, setDate] = useState("");
-  const [incidentReports, setIncidentReports] = useState([]);
-  const [defaultIncidentReports, setDefaultIncidentReports] = useState([]);
   const isLoggedIn = useAuth();
+  const [defaultAlerts, setDefaultAlerts] = useState([]);
+  const [alerts, setAlerts] = useState([]);
+  const [date, setDate] = useState("");
+
+  console.log(isLoggedIn.isLoggedIn);
 
   useEffect(() => {
     const fetchAlerts = async () => {
       try {
-        const response = await axios.get("/api/rti");
-        const rtis = response.data.sort(
-          (a, b) => new Date(b.reportTime) - new Date(a.reportTime)
-        );
-        setIncidentReports(rtis);
-        setDefaultIncidentReports(rtis);
+        const response = await axios.get("/api/alerts/previous");
+        setAlerts(response.data);
+        setDefaultAlerts(response.data);
       } catch (err) {
         console.error(err);
       }
@@ -30,34 +29,35 @@ const IncidentReport = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const toHomePage = () => {
-    nav("/");
-  };
-
   const resetDate = () => {
     setDate("");
-    setIncidentReports(defaultIncidentReports);
+    setAlerts(defaultAlerts);
   };
 
-  const updateIncidentReport = async (e) => {
+  const updateDate = async (e) => {
     e.preventDefault();
 
     setDate(e.target.value);
     const newDateTime = `${e.target.value}T00:00:00`;
 
     try {
-      const response = await axios.get("/api/rti/specific/day", {
+      const response = await axios.get("/api/alerts/specific/day", {
         params: {
           day: newDateTime,
         },
       });
-      const rtis = response.data.sort(
-        (a, b) => new Date(b.reportTime) - new Date(a.reportTime)
-      );
-      setIncidentReports(rtis);
+      setAlerts(response.data);
     } catch (err) {
       console.error(err);
     }
+  };
+
+  const createAlert = () => {
+    nav("/Create_Alert");
+  };
+
+  const toHomePage = () => {
+    nav("/");
   };
 
   if (!isLoggedIn.isLoggedIn) {
@@ -65,14 +65,17 @@ const IncidentReport = () => {
   }
 
   return (
-    <div className="incident-report-container">
+    <div className="alerts-container">
       <div className="view-alerts-container">
         <div className="nav-buttons">
           <h4 className="return-button" onClick={toHomePage}>
             To Home Page
           </h4>
+          <h3 className="return-button" onClick={createAlert}>
+            Create Alert
+          </h3>
         </div>
-        <h1 className="alerts-title">Incident Reports</h1>
+        <h1 className="alerts-title">Live Alerts</h1>
 
         <form className="alert-form">
           <Form.Group controlId="formBasicDate">
@@ -87,12 +90,12 @@ const IncidentReport = () => {
                 fontWeight: "bold",
               }}
             >
-              See incident reports for a specific day below
+              See alerts for a specific day below
             </Form.Label>
             <Form.Control
               type="date"
               value={date}
-              onChange={(e) => updateIncidentReport(e)}
+              onChange={(e) => updateDate(e)}
               required
             />
           </Form.Group>
@@ -101,31 +104,21 @@ const IncidentReport = () => {
 
         <div className="alert-form-container">
           <div className="alerts-list">
-            {incidentReports.map((ir, index) => (
+            {alerts.map((alert, index) => (
               <div key={index} className="alert-card">
-                <div className="alert-header">Incident Report</div>
+                <div className="alert-header">Alerts</div>
                 <div className="alert-body">
                   <p>
-                    <strong>Response Team Leader:</strong> {ir.rtTeamLeader}
+                    <strong>Alert Type:</strong> {alert.alertType}
                   </p>
                   <p>
-                    <strong>Description:</strong> {ir.incidentReport}
+                    <strong>Severity:</strong> {alert.severity}
                   </p>
                   <p>
-                    <strong>Department:</strong> {ir.depName}
+                    <strong>Location:</strong> {alert.location}
                   </p>
                   <p>
-                    <strong>Alert Type:</strong> {ir.alertType}
-                  </p>
-                  <p>
-                    <strong>Severity:</strong> {ir.severity}
-                  </p>
-                  <p>
-                    <strong>Time of Report:</strong> {ir.reportTime}
-                  </p>
-                  <p>
-                    <strong>Resources:</strong>{" "}
-                    {ir.resources?.join(", ") || "No resources reported"}
+                    <strong>Caller Email:</strong> {alert.callerEmail}
                   </p>
                 </div>
               </div>
@@ -137,4 +130,4 @@ const IncidentReport = () => {
   );
 };
 
-export default IncidentReport;
+export default ViewAlertsPage;

@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Form, Button } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../Misc/AuthContext";
 import axios from "axios";
 import "../../CSS/Alerts.css";
 
 const AlertsPage = () => {
   const nav = useNavigate();
-  const [defaultAlerts, setDefaultAlerts] = useState([]);
+  const isLoggedIn = useAuth();
   const [alerts, setAlerts] = useState([]);
-  const [date, setDate] = useState("");
   const [newAlert, setNewAlert] = useState({
     alertType: "",
     severity: "",
@@ -67,18 +67,7 @@ const AlertsPage = () => {
   ];
 
   useEffect(() => {
-    const fetchAlerts = async () => {
-      try {
-        const response = await axios.get("/api/alerts/previous");
-        setAlerts(response.data);
-        setDefaultAlerts(response.data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
     setResourceTypeSelection(emergencyEquipment);
-    fetchAlerts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -86,36 +75,16 @@ const AlertsPage = () => {
     setNewAlert({ ...newAlert, [e.target.name]: e.target.value });
   };
 
-  const resetDate = () => {
-    setDate("");
-    setAlerts(defaultAlerts);
-  };
-
-  const updateDate = async (e) => {
+  const createAlert = (e) => {
     e.preventDefault();
-
-    setDate(e.target.value);
-    const newDateTime = `${e.target.value}T00:00:00`;
-    console.log(newDateTime);
-
-    try {
-      const response = await axios.get("/api/alerts/specific/day", {
-        params: {
-          day: newDateTime,
-        },
+    axios
+      .post("/api/alerts/create", newAlert)
+      .then((res) => {
+        alert(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
       });
-      setAlerts(response.data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const handleResourceChange = (e) => {
-    const selectedOptions = Array.from(
-      e.target.selectedOptions,
-      (option) => option.value
-    );
-    setNewAlert({ ...newAlert, resourceType: selectedOptions });
   };
 
   const handleSubmit = async (e) => {
@@ -144,138 +113,121 @@ const AlertsPage = () => {
     nav("/");
   };
 
+  const toViewAlerts = () => {
+    nav("/Alerts");
+  };
+
+  if (!isLoggedIn.isLoggedIn) {
+    return <div>Please log in to view this page.</div>;
+  }
+
   return (
     <div className="alerts-container">
-      <h1 className="alerts-title">Live Alerts</h1>
-
-      <div className="alert-form-container">
-        <form className="alert-form" onSubmit={handleSubmit}>
-          <Form.Group controlId="formBasicAlertType">
-            <Form.Label>Alert Type</Form.Label>
-            <Form.Control
-              type="text"
-              name="alertType"
-              value={newAlert.alertType}
-              onChange={handleChange}
-              required
-            />
-          </Form.Group>
-
-          <Form.Group controlId="formBasicSeverity">
-            <Form.Label>Severity</Form.Label>
-            <Form.Control
-              as="select"
-              name="serverity"
-              value={newAlert.serverity}
-              onChange={handleChange}
-              required
-            >
-              <option value="">Select severity</option>
-              <option value="Low">Low</option>
-              <option value="Medium">Medium</option>
-              <option value="High">High</option>
-              <option value="Critical">Critical</option>
-            </Form.Control>
-          </Form.Group>
-
-          <Form.Group controlId="formBasicLocation">
-            <Form.Label>Location</Form.Label>
-            <Form.Control
-              type="text"
-              name="location"
-              value={newAlert.location}
-              onChange={handleChange}
-              required
-            />
-          </Form.Group>
-
-          <Form.Group controlId="formBasicEmail">
-            <Form.Label>Caller Email</Form.Label>
-            <Form.Control
-              type="email"
-              name="callerEmail"
-              value={newAlert.callerEmail}
-              onChange={handleChange}
-              required
-            />
-          </Form.Group>
-
-          <Form.Group controlId="formBasicResources">
-            <Form.Label>Required Resources</Form.Label>
-            <Form.Control
-              as="select"
-              multiple
-              name="resourceType"
-              value={newAlert.resourceType}
-              onChange={handleResourceChange}
-              style={{ height: "150px" }}
-            >
-              {resourceTypeSelection.map((resource, index) => (
-                <option key={index} value={resource}>
-                  {resource}
-                </option>
-              ))}
-            </Form.Control>
-            <Form.Text className="text-muted">
-              Hold Ctrl/Cmd to select multiple resources
-            </Form.Text>
-          </Form.Group>
-          <button type="submit" style={{ marginBottom: "30px" }}>
-            Create Alert
-          </button>
-
-          <Form.Group controlId="formBasicDate">
-            <Form.Label
-              style={{
-                borderRadius: "5px",
-                color: "black",
-                fontSize: "1.1rem",
-                textAlign: "center",
-                border: "1px solid #555",
-                backgroundColor: "#ff944d",
-                fontWeight: "bold",
-              }}
-            >
-              Select a date to view the alerts from that day
-            </Form.Label>
-            <Form.Control
-              type="date"
-              value={date}
-              onChange={(e) => updateDate(e)}
-              required
-            />
-          </Form.Group>
-          <Button onClick={resetDate}>Reset Date</Button>
-        </form>
-
-        <div className="alerts-list">
-          {alerts.map((alert, index) => (
-            <div key={index} className="alert-card">
-              <div className="alert-header">Alerts</div>
-              <div className="alert-body">
-                <p>
-                  <strong>Alert Type:</strong> {alert.alertType}
-                </p>
-                <p>
-                  <strong>Severity:</strong> {alert.severity}
-                </p>
-                <p>
-                  <strong>Location:</strong> {alert.location}
-                </p>
-                <p>
-                  <strong>Caller Email:</strong> {alert.callerEmail}
-                </p>
-                <p>
-                  <strong>Resources:</strong>{" "}
-                  {alert.resourceType?.join(", ") || "None"}
-                </p>
-              </div>
-            </div>
-          ))}
+      <div className="create-alerts-container">
+        <div className="nav-buttons">
+          <h4 className="return-button" onClick={toHomePage}>
+            To Home Page
+          </h4>
+          <h3 className="return-button" onClick={toViewAlerts}>
+            View Alerts
+          </h3>
         </div>
+        <h1 className="alerts-title">Create Alert</h1>
+        <div className="alert-form-container">
+          <form className="alert-form" onSubmit={handleSubmit}>
+            <Form.Group controlId="formBasicAlertType">
+              <Form.Label>Alert Type</Form.Label>
+              <Form.Control
+                type="text"
+                name="alertType"
+                value={newAlert.alertType}
+                onChange={handleChange}
+                required
+              />
+            </Form.Group>
 
-        <div className="back-button">
-          <button onClick={toHomePage}>&larr;</button>
+            <Form.Group controlId="formBasicSeverity">
+              <Form.Label>Severity</Form.Label>
+              <Form.Control
+                as="select"
+                name="serverity"
+                value={newAlert.severity}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select severity</option>
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+                <option value="Critical">Critical</option>
+              </Form.Control>
+            </Form.Group>
+
+            <Form.Group controlId="formBasicLocation">
+              <Form.Label>Location</Form.Label>
+              <Form.Control
+                type="text"
+                name="location"
+                value={newAlert.location}
+                onChange={handleChange}
+                required
+              />
+            </Form.Group>
+
+            <Form.Group controlId="formBasicEmail">
+              <Form.Label>Caller Email</Form.Label>
+              <Form.Control
+                type="email"
+                name="callerEmail"
+                value={newAlert.callerEmail}
+                onChange={handleChange}
+                required
+              />
+            </Form.Group>
+
+            <Form.Group controlId="formBasicResources">
+              <Form.Label>Required Resources</Form.Label>
+              <div
+                style={{
+                  maxHeight: "150px",
+                  overflowY: "auto",
+                  border: "1px solid #ced4da",
+                  padding: "0.5rem",
+                  borderRadius: "4px",
+                }}
+              >
+                {resourceTypeSelection.map((resource, index) => (
+                  <Form.Check
+                    className="resource-checkbox"
+                    key={index}
+                    type="checkbox"
+                    label={resource}
+                    value={resource}
+                    checked={newAlert.resourceType.includes(resource)}
+                    onChange={(e) => {
+                      const selected = [...newAlert.resourceType];
+                      if (e.target.checked) {
+                        selected.push(resource);
+                      } else {
+                        const idx = selected.indexOf(resource);
+                        if (idx !== -1) selected.splice(idx, 1);
+                      }
+                      setNewAlert({
+                        ...newAlert,
+                        resourceType: selected,
+                      });
+                    }}
+                  />
+                ))}
+              </div>
+              <Form.Text className="text-muted">
+                Select all that apply
+              </Form.Text>
+            </Form.Group>
+            <button type="submit" onClick={createAlert}>
+              Create Alert
+            </button>
+          </form>
         </div>
       </div>
     </div>

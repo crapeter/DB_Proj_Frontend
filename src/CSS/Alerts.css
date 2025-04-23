@@ -2,14 +2,29 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 30px 20px;
+  padding: 15px 10px;
+  overflow-y: auto;
   font-family: Arial, sans-serif;
+}
+
+.view-alerts-container,
+.create-alerts-container {
+  width: 100%;
+  max-width: 400px;
+  padding: 2rem;
+  background-color: #faf9f6;
+  border: 1px solid #888;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
 .alerts-title {
   color: #ff7f2a;
+}
+
+.create-alerts {
+  color: #ff7f2a;
   font-size: 24px;
-  margin-bottom: 30px;
 }
 
 .alert-form-container {
@@ -51,13 +66,6 @@
   border-radius: 4px;
 }
 
-/* .alerts-list {
-  max-height: 300px;
-  overflow-y: auto;
-  width: 100%;
-  max-width: 320px;
-} */
-
 .alert-card {
   width: 100%;
   max-width: 320px;
@@ -81,10 +89,6 @@
   color: #333;
 }
 
-.back-button {
-  margin-top: 20px;
-}
-
 .back-button button {
   background-color: red;
   color: white;
@@ -93,5 +97,49 @@
   border-radius: 50%;
   width: 50px;
   height: 50px;
+  cursor: pointer;
+}
+
+.resource-checkbox {
+  color: black;
+  background-color: white;
+}
+
+.form-check {
+  background-color: #faf9f6;
+}
+
+.form-check-label {
+  color: black;
+  background-color: #faf9f6;
+  font-size: 14px;
+}
+
+.form-label {
+  border-radius: 5px;
+}
+
+.nav-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.return-button {
+  background: #ff7f2a;
+  max-width: 150px;
+  color: white;
+  font-size: 20px;
+  padding: 3px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.return-button:hover {
+  background: #ff944d;
+  color: white;
+  font-size: 20px;
+  padding: 3px;
+  border-radius: 5px;
   cursor: pointer;
 }

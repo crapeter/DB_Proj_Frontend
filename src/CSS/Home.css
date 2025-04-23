@@ -24,8 +24,8 @@ body {
   box-shadow: none;
   border: 1px solid #aaa;
   border-radius: 0.5rem;
-  border-radius: 0.5rem;
   text-align: center;
+  background-color: #faf9f6;
 }
 
 h1,

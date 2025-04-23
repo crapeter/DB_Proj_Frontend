@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Form, Button } from "react-bootstrap";
 import { useAuth } from "../Misc/AuthContext";
+import axios from "axios";
 import "../../CSS/Home.css";
 
 const HomePage = () => {
@@ -31,8 +32,22 @@ const HomePage = () => {
 
   const login = (e) => {
     e.preventDefault();
-    // API call goes here eventually
-    setIsLoggedIn(true);
+    alert(`Email: ${email}, Password: ${password}`);
+    axios
+      .get("/api/users/login", {
+        params: { email, password },
+      })
+      .then((res) => {
+        if (res.data) {
+          setIsLoggedIn(true);
+          nav("/");
+        } else {
+          alert("Invalid email or password");
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   return (
