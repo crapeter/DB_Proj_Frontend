@@ -12,8 +12,6 @@ const ViewAlertsPage = () => {
   const [alerts, setAlerts] = useState([]);
   const [date, setDate] = useState("");
 
-  console.log(isLoggedIn.isLoggedIn);
-
   useEffect(() => {
     const fetchAlerts = async () => {
       try {

@@ -8,12 +8,13 @@ import "../../CSS/Alerts.css";
 const AlertsPage = () => {
   const nav = useNavigate();
   const isLoggedIn = useAuth();
+  const userEmail = useAuth();
   const [alerts, setAlerts] = useState([]);
   const [newAlert, setNewAlert] = useState({
     alertType: "",
     severity: "",
     location: "",
-    callerEmail: "",
+    callerEmail: userEmail.userEmail,
     resourceType: [],
   });
   const [resourceTypeSelection, setResourceTypeSelection] = useState([]);
@@ -81,6 +82,13 @@ const AlertsPage = () => {
       .post("/api/alerts/create", newAlert)
       .then((res) => {
         alert(res.data);
+        setNewAlert({
+          alertType: "",
+          severity: "",
+          location: "",
+          callerEmail: userEmail.userEmail,
+          resourceType: [],
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -99,7 +107,7 @@ const AlertsPage = () => {
       setAlerts([response.data, ...alerts]);
       setNewAlert({
         alertType: "",
-        serverity: "",
+        severity: "",
         location: "",
         callerEmail: "",
         resourceType: [],
@@ -150,7 +158,7 @@ const AlertsPage = () => {
               <Form.Label>Severity</Form.Label>
               <Form.Control
                 as="select"
-                name="serverity"
+                name="severity"
                 value={newAlert.severity}
                 onChange={handleChange}
                 required
@@ -169,17 +177,6 @@ const AlertsPage = () => {
                 type="text"
                 name="location"
                 value={newAlert.location}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
-
-            <Form.Group controlId="formBasicEmail">
-              <Form.Label>Caller Email</Form.Label>
-              <Form.Control
-                type="email"
-                name="callerEmail"
-                value={newAlert.callerEmail}
                 onChange={handleChange}
                 required
               />

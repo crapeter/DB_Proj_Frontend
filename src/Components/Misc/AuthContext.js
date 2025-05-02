@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect } from "react";
 
 const authContext = createContext();
 
@@ -8,6 +8,11 @@ export const AuthProvider = ({ children }) => {
     return storedValue === "true"; // makes sure it's parsed as a boolean
   });
 
+  const [userEmail, setUserEmail] = useState(() => {
+    const storedValue = localStorage.getItem("userEmail");
+    return storedValue || ""; // makes sure it's parsed as a string
+  });
+
   useEffect(() => {
     if (isLoggedIn !== null) {
       localStorage.setItem("isLoggedIn", isLoggedIn.toString());
@@ -15,11 +20,13 @@ export const AuthProvider = ({ children }) => {
   }, [isLoggedIn]);
 
   useEffect(() => {
-    console.log('isLoggedIn changed:', isLoggedIn); // Helpful for debugging
-  }, [isLoggedIn]);
+    localStorage.setItem("userEmail", userEmail);
+  }, [userEmail]);
 
   return (
-    <authContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
+    <authContext.Provider
+      value={{ isLoggedIn, setIsLoggedIn, userEmail, setUserEmail }}
+    >
       {children}
     </authContext.Provider>
   );

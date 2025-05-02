@@ -1,16 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Form, Button } from "react-bootstrap";
+import { ChevronRight } from "lucide-react";
 import { useAuth } from "../Misc/AuthContext";
 import axios from "axios";
 import "../../CSS/Home.css";
 
 const HomePage = () => {
   const nav = useNavigate();
-  const { isLoggedIn, setIsLoggedIn } = useAuth();
+  const { isLoggedIn, setIsLoggedIn, setUserEmail, userEmail } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [dependents, setDependents] = useState([]);
+
+  useEffect(() => {
+    if (isLoggedIn && userEmail) {
+      axios
+        .get("/api/ec/get", { params: { email: userEmail } })
+        .then((res) => {
+          setDependents(res.data);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+  }, [isLoggedIn, userEmail]);
 
   const toRegisterPage = () => {
     nav("/Register");
@@ -26,13 +41,13 @@ const HomePage = () => {
 
   const logout = () => {
     setIsLoggedIn(false);
+    setUserEmail("");
     setEmail("");
     setPassword("");
   };
 
   const login = (e) => {
     e.preventDefault();
-    alert(`Email: ${email}, Password: ${password}`);
     axios
       .get("/api/users/login", {
         params: { email, password },
@@ -40,6 +55,7 @@ const HomePage = () => {
       .then((res) => {
         if (res.data) {
           setIsLoggedIn(true);
+          setUserEmail(email);
           nav("/");
         } else {
           alert("Invalid email or password");
@@ -71,26 +87,40 @@ const HomePage = () => {
           <div className="content">
             <div className="section">
               <div className="label" id="live_alert_id" onClick={createAlert}>
-                Live Alerts
+                <span>Live Alerts</span>
+                <ChevronRight size={20} />
               </div>
               <div className="box">Stuff to be added here</div>
             </div>
           </div>
 
-          <div className="section">
-            <div
-              className="label"
-              id="incident_report_id"
-              onClick={viewReports}
-            >
-              Incident Report
+          <div className="content">
+            <div className="section">
+              <div
+                className="label"
+                id="incident_report_id"
+                onClick={viewReports}
+              >
+                <span>Incident Report</span>
+                <ChevronRight size={20} />
+              </div>
+              <div className="box">Stuff to be added here</div>
             </div>
-            <div className="box">Stuff to be added here</div>
           </div>
 
           <div className="section center">
-            <div className="label">Safety Tips</div>
-            <div className="box tall">Stuff to be added here</div>
+            <div className="label">Your Dependents</div>
+            <div className="box tall">
+              {dependents.length > 0 ? (
+                dependents.map((dep, index) => (
+                  <div key={index}>
+                    {dep.fName} {dep.mInit}. {dep.lName}
+                  </div>
+                ))
+              ) : (
+                <div>No dependents found.</div>
+              )}
+            </div>
           </div>
         </div>
       ) : (

@@ -112,7 +112,7 @@ const IncidentReport = () => {
                     <strong>Description:</strong> {ir.incidentReport}
                   </p>
                   <p>
-                    <strong>Department:</strong> {ir.depName}
+                    <strong>Department:</strong> {ir.depName.replace(/_/g, " ")}
                   </p>
                   <p>
                     <strong>Alert Type:</strong> {ir.alertType}
