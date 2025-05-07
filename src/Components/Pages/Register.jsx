@@ -7,7 +7,7 @@ import "../../CSS/Register.css";
 
 const Register = () => {
   const nav = useNavigate();
-  const { setIsLoggedIn, setUserEmail } = useAuth();
+  const { setUserEmail } = useAuth();
   const [isRegistered, setIsRegistered] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -51,7 +51,6 @@ const Register = () => {
     axios
       .post("/api/users/register", dataToSend)
       .then((res) => {
-        setIsLoggedIn(true);
         setUserEmail(formData.email);
         setIsRegistered(true);
         alert(res.data);
